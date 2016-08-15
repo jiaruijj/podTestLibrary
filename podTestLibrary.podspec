@@ -32,10 +32,12 @@ TODO: Add long description of the pod here.
 
   s.source_files = 'podTestLibrary/Classes/**/*'
   
+  s.resource     = "podTestLibrary/Classes/FNDebugManager/Controllers/FNDebugSettingViewController.xib"
    
-   s.resource = {
-     'podTestLibrary' => ['podTestLibrary/Classes/FNDebugManager/Controllers/FNDebugSettingViewController.xib']
-   }
+   
+  #s.resource = {
+  #   'podTestLibrary' => ['podTestLibrary/Classes/FNDebugManager/Controllers/FNDebugSettingViewController.xib']
+  # }
 
   # s.resource_bundles 
   # s.public_header_files = 'Pod/Classes/**/*.h'
