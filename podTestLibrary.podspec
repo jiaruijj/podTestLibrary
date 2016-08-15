@@ -30,7 +30,7 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'podTestLibrary/Classes/**/*'
+  s.source_files = 'podTestLibrary/Classes/**/*.{h,m}'
   
   s.resource     = "podTestLibrary/Classes/FNDebugManager/Controllers/FNDebugSettingViewController.xib"
    
