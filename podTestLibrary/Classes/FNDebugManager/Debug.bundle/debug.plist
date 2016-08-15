@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>name</key>
+		<string>host配置</string>
+		<key>author</key>
+		<string>HG</string>
+		<key>class</key>
+		<string>FNDebugSettingViewController</string>
+		<key>version</key>
+		<string>1.0</string>
+	</dict>
+	<dict>
+		<key>name</key>
+		<string>查看沙盒</string>
+		<key>author</key>
+		<string>JR</string>
+		<key>class</key>
+		<string>FNSandBoxViewController</string>
+		<key>version</key>
+		<string>1.0</string>
+	</dict>
+	<dict>
+		<key>name</key>
+		<string>TODO</string>
+		<key>author</key>
+		<string>Steven Jobs</string>
+		<key>class</key>
+		<string>Apple</string>
+		<key>version</key>
+		<string>1.0</string>
+	</dict>
+</array>
+</plist>
