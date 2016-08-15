@@ -32,9 +32,9 @@ TODO: Add long description of the pod here.
 
   s.source_files = 'podTestLibrary/Classes/**/*'
   
-  # s.resource_bundles = {
-  #   'podTestLibrary' => ['podTestLibrary/Assets/*.png']
-  # }
+   s.resource_bundles = {
+     'podTestLibrary' => ['podTestLibrary/Classes/FNDebugManager/Controllers/FNDebugSettingViewController.xib']
+   }
 
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
