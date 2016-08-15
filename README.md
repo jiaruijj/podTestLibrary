@@ -17,7 +17,12 @@ podTestLibrary is available through [CocoaPods](http://cocoapods.org). To instal
 it, simply add the following line to your Podfile:
 
 ```ruby
-pod "podTestLibrary"
+platform :ios, ‘8.3’
+
+target 'TestPodTwo’ do
+pod "podTestLibrary",:git=>'https://github.com/jiaruijj/podTestLibrary.git'
+
+end
 ```
 
 ## Author
