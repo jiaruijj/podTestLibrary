@@ -34,8 +34,8 @@ TODO: Add long description of the pod here.
   
   
   s.resource_bundles = {
-     'FNDebugSettingViewController' => ['podTestLibrary/Classes/FNDebugManager/Controllers/FNDebugSettingViewController.xib']
-     'Debug' => ['podTestLibrary/Classes/FNDebugManager/Debug.bundle']
+     'FNDebugSettingViewController' => ['podTestLibrary/Classes/FNDebugManager/Controllers/FNDebugSettingViewController.xib’],
+     'Debug' => ['podTestLibrary/Classes/FNDebugManager/Debug.bundle’],
      'Cer' => ['podTestLibrary/Classes/FNDebugManager/fn_ssl.cer']
    }
 
