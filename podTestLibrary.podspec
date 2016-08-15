@@ -34,7 +34,7 @@ TODO: Add long description of the pod here.
   
   #s.resource     = "podTestLibrary/Classes/FNDebugManager/Controllers/FNDebugSettingViewController.xib"
 
-  #s.resource     = "podTestLibrary/Classes/FNDebugManager/Debug.bundle" 
+  s.resource     = "podTestLibrary/Classes/FNDebugManager/Debug.bundle" 
    
    
   #s.resource_bundles = {
