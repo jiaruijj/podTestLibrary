@@ -9,6 +9,7 @@
 #import "FNDebugManager.h"
 #import "FNDebugRootViewController.h"
 #import "FloatBallButton.h"
+#import "NSBundle+MyLibrary.h"
 //#import <UMMobClick/MobClick.h>
 //#import <PgySDK/PgyManager.h>
 //#import <PgyUpdate/PgyUpdateManager.h>
@@ -23,18 +24,20 @@ NSString *  const FNDomainTypeDidChangedNotification = @"FNDomainTypeDidChangedN
 
 static NSString *  mAppLogNetURL = @"";
 static NSString *  mErrorLogNetURL = @"";
-//static NSString * const FeiNiuDevBundleID = @"com.feiniu.market.merchant";
-static NSString * const FeiNiuDevBundleID = @"com.feiniu.FNDebugManagerDemo";
-static NSString * const FeiNiuOnlineBundleID = @"";
+
+static NSString * const FeiNiuDevBundleID = @"com.feiniu.market.merchant";
+static NSString * const FeiNiuOnlineBundleID = @"com.feiniu.FNMerchant";
 static NSString * const FNLastDomainTypeName = @"FNLastDomainTypeName";
 static NSString * const kUmengKey = @"5796c9d7e0f55a39ba0011fc";
 static NSString * const kChannelId = @"蒲公英";
 
-/**获取 Java API 的 Domain **/
-static NSString *kGetConfigerDomainDev = @"http://mall-mobile-api.dev1.fn";
-static NSString *kGetConfigerDomainBeta = @"http://mall-mobile-api.beta1.fn";
-static NSString *kGetConfigerDomainPreview = @"http://preview.interface.merchant.feiniu.com";
-static NSString *kGetConfigerDomainOnline = @"http://interface.merchant.feiniu.com";
+/**获取 Java API 的 Domain**/
+/*没有都没设置默认为商家测试版*/
+static NSString *kGetConfigerDomainDev = @"https://mall-mobile-api.dev1.fn";
+static NSString *kGetConfigerDomainBeta = @"https://mall-mobile-api.beta1.fn";
+static NSString *kGetConfigerDomainPreview = @"https://preview-interface-merchant.feiniu.com";
+static NSString *kGetConfigerDomainOnline = @"https://interface-merchant.feiniu.com";
+
 
 
 static NSString * const kBodyKey = @"body";
@@ -57,6 +60,14 @@ static NSString * const KAPIKey = @"wirelessAPI";
 @property (nonatomic, strong) NSArray *trustedCertificates;
 @property (nonatomic, copy)   void(^requestResult)(BOOL success);
 
+
+@property (nonatomic, copy) NSString *domainDev;
+@property (nonatomic, copy) NSString *domainBeta;
+@property (nonatomic, copy) NSString *domainPreview;
+@property (nonatomic, copy) NSString *domainOnline;
+@property (nonatomic, copy) NSString *devBundleID;
+@property (nonatomic, copy) NSString *onlineBundleID;
+
 @end
 
 
@@ -74,6 +85,22 @@ static NSString * const KAPIKey = @"wirelessAPI";
         DLog(@"当前环境是：%@", [manager currentEnvString]);
     });
     return manager;
+}
+
+
+- (void)configDomainUrl:(NSString *)domainDev
+             domainBeta:(NSString *)domainBeta
+          domainPreview:(NSString *)domainPreview
+           domainOnline:(NSString *)domainOnline
+            devBundleID:(NSString *)devBundleID
+         onlineBundleID:(NSString *)onlineBundleID
+{
+    self.domainDev = domainDev;
+    self.domainBeta = domainBeta;
+    self.domainPreview = domainPreview;
+    self.domainOnline = domainOnline;
+    self.devBundleID = devBundleID;
+    self.onlineBundleID = onlineBundleID;
 }
 
 - (void)configDomainType
@@ -236,7 +263,7 @@ static NSString * const KAPIKey = @"wirelessAPI";
 
 - (BOOL)isOnlineClient{
     
-    if ([self.bundleID isEqualToString:FeiNiuDevBundleID]) {
+    if ([self.bundleID isEqualToString:(self.devBundleID?self.devBundleID:FeiNiuDevBundleID)]) {
         return NO;
     }
     return YES;
@@ -275,7 +302,8 @@ static NSString * const KAPIKey = @"wirelessAPI";
         _floatBallButton = [FloatBallButton buttonWithType:UIButtonTypeCustom];
         _floatBallButton.MoveEnable = YES;
         _floatBallButton.frame = CGRectMake([[UIScreen mainScreen] bounds].size.width - 40, [[UIScreen mainScreen] bounds].size.width - 100, 40, 40);
-        [_floatBallButton setImage:[UIImage imageNamed:@"Debug.bundle/images/bug"] forState:UIControlStateNormal];
+        UIImage *image = [UIImage imageNamed:@"Debug.bundle/images/bug" inBundle:[NSBundle myLibraryBundle] compatibleWithTraitCollection:nil];
+        [_floatBallButton setImage:image forState:UIControlStateNormal];
         [_floatBallButton addTarget:self action:@selector(floatButtonAction:) forControlEvents:UIControlEventTouchUpInside];
     }
     return _floatBallButton;
@@ -478,7 +506,8 @@ static NSString * const KAPIKey = @"wirelessAPI";
 }
 
 - (void)addTrustedCertificates {
-    NSString *cerPath = [[NSBundle mainBundle] pathForResource:@"fn_ssl" ofType:@"cer"]; //证书的路径
+    if (self.isHttps) return;
+    NSString *cerPath = [[NSBundle myLibraryBundle] pathForResource:@"fn_ssl" ofType:@"cer"];
     NSData *cerData = [NSData dataWithContentsOfFile:cerPath];
     SecCertificateRef certificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)(cerData));
     self.trustedCertificates = @[CFBridgingRelease(certificate)];
@@ -503,7 +532,7 @@ static NSString * const KAPIKey = @"wirelessAPI";
     NSString *filePath = [self filePath];
     NSDictionary *apiDictionary = [self apiDictionaryForPath:filePath];
     if (!apiDictionary) {
-        NSString *defaultFilePath = [[NSBundle mainBundle] pathForResource:[self fileName] ofType:@"plist"];
+        NSString *defaultFilePath = [[NSBundle myLibraryBundle] pathForResource:[self fileName] ofType:@"plist"];
         apiDictionary = [self apiDictionaryForPath:defaultFilePath];
     }
     return apiDictionary;
@@ -519,7 +548,7 @@ static NSString * const KAPIKey = @"wirelessAPI";
 #pragma mark -session delegate
 - (void)URLSession:(NSURLSession *)session didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge completionHandler:(void (^)(NSURLSessionAuthChallengeDisposition, NSURLCredential * _Nullable))completionHandler
 {
-    NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengeCancelAuthenticationChallenge;
+    NSURLSessionAuthChallengeDisposition disposition = NSURLSessionAuthChallengePerformDefaultHandling;
     __block NSURLCredential *credential = nil;
     
     //1)获取trust object
@@ -541,10 +570,10 @@ static NSString * const KAPIKey = @"wirelessAPI";
         }
     }
     
-    //    if (self.environmentType == FNDomainTypeDev || self.environmentType == FNDomainTypeBeta) {
+        if (self.environmentType == FNDomainTypeDev || self.environmentType == FNDomainTypeBeta) {
     credential = [[NSURLCredential alloc] initWithTrust:challenge.protectionSpace.serverTrust];
     disposition = NSURLSessionAuthChallengeUseCredential;
-    //    }
+        }
     
     if (completionHandler) {
         completionHandler(disposition, credential);
@@ -669,25 +698,48 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 - (NSString *)javaDomainForCurrentEnvironment
 {
     NSString *javaAPIDomainString = nil;
-    switch (self.environmentType) {
-        case FNDomainTypeNone:
-            javaAPIDomainString = kGetConfigerDomainOnline;//online
-            break;
-        case FNDomainTypeDev:
-            javaAPIDomainString = kGetConfigerDomainDev;
-            break;
-        case FNDomainTypeBeta:
-            javaAPIDomainString = kGetConfigerDomainBeta;
-            break;
-        case FNDomainTypePreview:
-            javaAPIDomainString = kGetConfigerDomainPreview;
-            break;
-        case FNDomainTypeOnline:
-            javaAPIDomainString = kGetConfigerDomainOnline;
-            break;
-        default:
-            break;
+    if (self.domainOnline||self.domainDev||self.domainPreview||self.domainBeta) {
+        switch (self.environmentType) {
+            case FNDomainTypeNone:
+                javaAPIDomainString = self.domainOnline;
+                break;
+            case FNDomainTypeDev:
+                javaAPIDomainString = self.domainDev;
+                break;
+            case FNDomainTypeBeta:
+                javaAPIDomainString = self.domainBeta;
+                break;
+            case FNDomainTypePreview:
+                javaAPIDomainString = self.domainPreview;
+                break;
+            case FNDomainTypeOnline:
+                javaAPIDomainString = self.domainOnline;
+                break;
+            default:
+                break;
+        }
+    }  else {
+        switch (self.environmentType) {
+            case FNDomainTypeNone:
+                javaAPIDomainString = kGetConfigerDomainOnline;//online
+                break;
+            case FNDomainTypeDev:
+                javaAPIDomainString = kGetConfigerDomainDev;
+                break;
+            case FNDomainTypeBeta:
+                javaAPIDomainString = kGetConfigerDomainBeta;
+                break;
+            case FNDomainTypePreview:
+                javaAPIDomainString = kGetConfigerDomainPreview;
+                break;
+            case FNDomainTypeOnline:
+                javaAPIDomainString = kGetConfigerDomainOnline;
+                break;
+            default:
+                break;
+        }
     }
+
     return javaAPIDomainString;
 }
 

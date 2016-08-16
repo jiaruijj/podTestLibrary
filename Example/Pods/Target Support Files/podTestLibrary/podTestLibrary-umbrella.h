@@ -1,5 +1,6 @@
 #import <UIKit/UIKit.h>
 
+#import "NSBundle+MyLibrary.h"
 #import "UIColor+Hex.h"
 #import "UILabel+Delay.h"
 #import "FNDebugRootViewController.h"

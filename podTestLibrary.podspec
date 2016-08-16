@@ -36,14 +36,15 @@ TODO: Add long description of the pod here.
 
   #s.resource     = "podTestLibrary/Classes/FNDebugManager/Debug.bundle"
    
-   
-  s.resource_bundles = {
-    'xibSource' => ['podTestLibrary/Classes/FNDebugManager/Controllers/FNDebugSettingViewController.xib'],
-    'debugBundle' => ['podTestLibrary/Classes/FNDebugManager/Debug.bundle'],
-    'debugCer' => ['podTestLibrary/Classes/FNDebugManager/fn_ssl.cer']
-  }
+  s.resources = ["podTestLibrary/Classes/**/*.{xib}","podTestLibrary/Classes/FNDebugManager/Debug.bundle","podTestLibrary/Classes/FNDebugManager/fn_ssl.cer"]
 
-  # s.resource_bundles 
+    #s.resource_bundles = {
+    #  'xibSource' => ['podTestLibrary/Classes/FNDebugManager/Controllers/#FNDebugSettingViewController.xib'],
+    # 'Debug' => ['podTestLibrary/Classes/FNDebugManager/Debug.bundle'],
+    #'debugCer' => ['podTestLibrary/Classes/FNDebugManager/fn_ssl.cer']
+    #}
+
+  # s.resource_bundles
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'
   # s.dependency 'AFNetworking', '~> 2.3'

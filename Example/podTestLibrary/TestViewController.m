@@ -7,6 +7,7 @@
 //
 
 #import "TestViewController.h"
+#import "FNDebugManager.h"
 
 @interface TestViewController ()
 
@@ -18,6 +19,8 @@
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    [FNDebugManager shareManager].parentViewController = self;
+    [[FNDebugManager shareManager] invocationEvent:FNDebugEventBubble];
 }
 
 - (void)didReceiveMemoryWarning

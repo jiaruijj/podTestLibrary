@@ -9,6 +9,7 @@
 #import "FNSandBoxViewController.h"
 #import "UIViewController+Path.h"
 #import "FNDebugManager.h"
+#import "NSBundle+MyLibrary.h"
 
 static NSString *extentions [] = {
     @"plist",
@@ -61,9 +62,8 @@ static NSString *viewControllers [] = {
     BOOL directiory = NO;
     [_fileManager fileExistsAtPath:subPath isDirectory:&directiory];
     cell.accessoryType = directiory ? UITableViewCellAccessoryDisclosureIndicator :UITableViewCellAccessoryNone ;
-    cell.imageView.image = [UIImage imageNamed:directiory ? @"Debug.bundle/images/folder" : @"Debug.bundle/images/file"];
+    cell.imageView.image = [UIImage imageNamed:directiory ? @"Debug.bundle/images/folder" : @"Debug.bundle/images/file" inBundle:[NSBundle myLibraryBundle] compatibleWithTraitCollection:nil];
     cell.textLabel.font = [UIFont systemFontOfSize:14.0];
-    DLog(@"%@",cell.textLabel.text);
     return cell;
 }
 

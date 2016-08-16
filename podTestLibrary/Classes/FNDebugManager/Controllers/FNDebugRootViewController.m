@@ -7,6 +7,7 @@
 //
 
 #import "FNDebugRootViewController.h"
+#import "NSBundle+MyLibrary.h"
 
 @interface FNDebugRootViewController ()
 @property (nonatomic, strong) NSMutableArray *data;
@@ -25,7 +26,7 @@
 
 
 - (void) configData {
-    NSBundle *manager = [NSBundle mainBundle];
+    NSBundle *manager = [NSBundle myLibraryBundle];
     NSString *documentsDirectory = [manager pathForResource:@"Debug.bundle/debug" ofType:@"plist"];
     self.data = [[NSMutableArray alloc] initWithContentsOfFile:documentsDirectory];
 }

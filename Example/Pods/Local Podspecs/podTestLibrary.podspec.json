@@ -19,5 +19,9 @@
     "ios": "8.0"
   },
   "source_files": "podTestLibrary/Classes/**/*.{h,m}",
-  "resources": "podTestLibrary/Classes/FNDebugManager/Debug.bundle"
+  "resources": [
+    "podTestLibrary/Classes/**/*.{xib}",
+    "podTestLibrary/Classes/FNDebugManager/Debug.bundle",
+    "podTestLibrary/Classes/FNDebugManager/fn_ssl.cer"
+  ]
 }
