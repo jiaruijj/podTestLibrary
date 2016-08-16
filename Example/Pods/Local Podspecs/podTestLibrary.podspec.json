@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "summary": "A short description of podTestLibrary.",
   "description": "TODO: Add long description of the pod here.",
-  "homepage": "https://github.com/<GITHUB_USERNAME>/podTestLibrary",
+  "homepage": "https://github.com/jiaruijj/podTestLibrary",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
@@ -12,11 +12,12 @@
     "JR": "jiaruijj@163.com"
   },
   "source": {
-    "git": "https://github.com/<GITHUB_USERNAME>/podTestLibrary.git",
+    "git": "https://github.com/jiaruijj/podTestLibrary.git",
     "tag": "0.1.0"
   },
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "podTestLibrary/Classes/**/*"
+  "source_files": "podTestLibrary/Classes/**/*.{h,m}",
+  "resources": "podTestLibrary/Classes/FNDebugManager/Debug.bundle"
 }
