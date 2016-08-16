@@ -65,8 +65,6 @@ static NSString * const KAPIKey = @"wirelessAPI";
 @property (nonatomic, copy) NSString *domainBeta;
 @property (nonatomic, copy) NSString *domainPreview;
 @property (nonatomic, copy) NSString *domainOnline;
-@property (nonatomic, copy) NSString *devBundleID;
-@property (nonatomic, copy) NSString *onlineBundleID;
 
 @end
 
@@ -92,15 +90,11 @@ static NSString * const KAPIKey = @"wirelessAPI";
              domainBeta:(NSString *)domainBeta
           domainPreview:(NSString *)domainPreview
            domainOnline:(NSString *)domainOnline
-            devBundleID:(NSString *)devBundleID
-         onlineBundleID:(NSString *)onlineBundleID
 {
     self.domainDev = domainDev;
     self.domainBeta = domainBeta;
     self.domainPreview = domainPreview;
     self.domainOnline = domainOnline;
-    self.devBundleID = devBundleID;
-    self.onlineBundleID = onlineBundleID;
 }
 
 - (void)configDomainType

@@ -49,13 +49,27 @@ extern NSString * const FNDomainTypeDidChangedNotification;
 /**
  *  设置当前环境
  */
-
 @property (nonatomic, assign) FNDomainType domainType;
-@property (nonatomic, assign) FNDomainType defaultDomainType;   // 默认的启动环境 如果不配置那么为 online
-@property (nonatomic, assign, readonly) BOOL isOnlineClient;    // 是否允许push到DebugVC；
-@property (nonatomic, assign) BOOL isHttps;                     // 是否是https
+/**
+ *  默认的启动环境 如果不配置那么为 online
+ */
+@property (nonatomic, assign) FNDomainType defaultDomainType;
+/**
+ *  是否是上线,优先级最高
+ */
+@property (nonatomic, assign, readonly) BOOL isOnlineClient;
+/**
+ *  是否是https
+ */
+@property (nonatomic, assign) BOOL isHttps;
+/**
+ *  测试环境的bundleID
+ */
+@property (nonatomic, copy) NSString *devBundleID;
 
-//XMPP服务器 域名
+/**
+ *  XMPP服务器 域名
+ */
 @property (nonatomic,copy) NSString *hostName;
 
 /**
