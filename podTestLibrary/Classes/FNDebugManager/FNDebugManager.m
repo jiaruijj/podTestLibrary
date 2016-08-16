@@ -500,7 +500,7 @@ static NSString * const KAPIKey = @"wirelessAPI";
 }
 
 - (void)addTrustedCertificates {
-    if (self.isHttps) return;
+    if (!self.isHttps) return;
     NSString *cerPath = [[NSBundle myLibraryBundle] pathForResource:@"fn_ssl" ofType:@"cer"];
     NSData *cerData = [NSData dataWithContentsOfFile:cerPath];
     SecCertificateRef certificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)(cerData));
