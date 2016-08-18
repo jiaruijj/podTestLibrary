@@ -14,7 +14,6 @@
 + (UIColor *) hexStringToColor: (NSString *) stringToConvert
 {
     NSString *cString = [[stringToConvert stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]] uppercaseString];
-    // String should be 6 or 8 characters
     
     if ([cString length] < 6) return [UIColor blackColor];
     // strip 0X if it appears

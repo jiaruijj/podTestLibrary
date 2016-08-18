@@ -39,12 +39,16 @@ typedef NS_ENUM (NSInteger , FNDebugEvent) {
     FNDebugEventBubble,      // 通过悬浮小球呼出
 } ;
 
+typedef void(^saveSuccessBlock)();
+typedef void(^saveFailureBlock)();
+
 /** 环境切换的通知 */
 extern NSString * FNChangeEnvironmentNotificationName;
 /** domain地址改变的 Notification */
 extern NSString * const FNDomainTypeDidChangedNotification;
 
 @interface FNDebugManager : NSObject
+
 
 /**
  *  设置当前环境
@@ -66,11 +70,13 @@ extern NSString * const FNDomainTypeDidChangedNotification;
  *  测试环境的bundleID
  */
 @property (nonatomic, copy) NSString *devBundleID;
+@property (nonatomic, copy) NSString *cid;
+@property (nonatomic, copy) NSString *deviceToken;
+//XMPP服务器 域名
+@property (nonatomic, copy) NSString *hostName;
 
-/**
- *  XMPP服务器 域名
- */
-@property (nonatomic,copy) NSString *hostName;
+@property (nonatomic, copy) saveSuccessBlock saveSuccessBlock;
+@property (nonatomic, copy) saveFailureBlock saveFailureBlock;
 
 /**
  *  父控制器
@@ -108,6 +114,19 @@ extern NSString * const FNDomainTypeDidChangedNotification;
 - (void)configDomainType;
 
 /**
+ *  配置第三方
+ */
+//- (void)config3rdUnits;
+
+/**
+ *  设置debug界面的cid和deviceToken
+ *
+ *  @param cid         
+ *  @param deviceToken
+ */
+- (void)configCid:(NSString *)cid deviceToken:(NSString *)deviceToken;
+
+/**
  *  配置各个环境的Url
  */
 - (void)configDomainUrl:(NSString *)domainDev
@@ -115,10 +134,14 @@ extern NSString * const FNDomainTypeDidChangedNotification;
           domainPreview:(NSString *)domainPreview
            domainOnline:(NSString *)domainOnline;
 
+
 /**
- *  配置第三方
+ *  保存环境
+ *
+ *  @param success 成功回调
+ *  @param failure 失败回调
  */
-//- (void)config3rdUnits;
+- (void)saveEviromentChnageSuccess:(saveSuccessBlock)success failure:(saveFailureBlock)failure;
 
 /**
  *  设置Debug呼出样式

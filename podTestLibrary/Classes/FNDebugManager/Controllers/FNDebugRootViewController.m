@@ -7,7 +7,8 @@
 //
 
 #import "FNDebugRootViewController.h"
-#import "NSBundle+MyLibrary.h"
+#import "FNDebugManager.h"
+#import "FNDebugSettingViewController.h"
 
 @interface FNDebugRootViewController ()
 @property (nonatomic, strong) NSMutableArray *data;
@@ -26,7 +27,7 @@
 
 
 - (void) configData {
-    NSBundle *manager = [NSBundle myLibraryBundle];
+    NSBundle *manager = [NSBundle mainBundle];
     NSString *documentsDirectory = [manager pathForResource:@"Debug.bundle/debug" ofType:@"plist"];
     self.data = [[NSMutableArray alloc] initWithContentsOfFile:documentsDirectory];
 }
@@ -65,10 +66,15 @@
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
     NSString *classString = self.data[indexPath.row][@"class"];
     Class newClass = NSClassFromString(classString);
-    UIViewController *controller = [[newClass alloc] init];
-    controller.title = self.data[indexPath.row][@"name"];
-    if (controller)
-        [self.navigationController pushViewController:controller animated:YES];
-}
+        UIViewController *controller = [[newClass alloc] init];
+    if ([controller isKindOfClass:[FNDebugSettingViewController class]]) {
+        controller = [[FNDebugSettingViewController alloc] initWithCid:[FNDebugManager shareManager].cid deviceToken:[FNDebugManager shareManager].deviceToken];
+    }
 
+    controller.title = self.data[indexPath.row][@"name"];
+
+    if (controller) {
+        [self.navigationController pushViewController:controller animated:YES];
+    }
+}
 @end

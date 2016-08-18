@@ -7,12 +7,13 @@
 //
 
 #import "FNDebugSettingViewController.h"
-#import "FNDebugManager.h"
 #import "UIColor+Hex.h"
 #import "UILabel+Delay.h"
 #import "FNMenuLabel.h"
 
 
+#define ActivityWidth 50
+#define ActivityHeight 50
 
 @interface FNDebugSettingViewController () <UITableViewDelegate,UITableViewDataSource>
 
@@ -21,16 +22,26 @@
 @property (weak, nonatomic) IBOutlet FNMenuLabel *cidLabel;
 @property (weak, nonatomic) IBOutlet FNMenuLabel *diviceTokenLabel;
 
-
+@property (nonatomic, copy)   NSString *cid;
+@property (nonatomic, copy)   NSString *deviceToken;
+@property (nonatomic, strong) UIActivityIndicatorView *activity;
 @property (nonatomic, strong) NSArray *titleArray;
 @property (nonatomic, assign) NSInteger currentIndexPath;
 @property (nonatomic, assign) NSInteger oldIndexPath;
-@property (nonatomic, strong) UILabel *clientIDLabel;
 
 
 @end
 
 @implementation FNDebugSettingViewController
+
+- (instancetype)initWithCid:(NSString *)cid deviceToken:(NSString *)deviceToken {
+    if (self = [super init]) {
+        _cid = cid;
+        _deviceToken = deviceToken;
+    }
+    return self;
+}
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -38,98 +49,37 @@
     self.titleArray = @[@"Dev",@"Beta",@"Preview",@"Online",];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"titleCell"];
+    self.saveSuccessBlock = [FNDebugManager shareManager].saveSuccessBlock;
+    self.saveFailureBlock = [FNDebugManager shareManager].saveFailureBlock;
     [self configUI];
-//    self.tableView.tableFooterView = [self footerView];
-    
-    
-    
 }
 
 
 - (void)configUI {
     [self.settingButton addTarget:self action:@selector(saveEnviermentChangeAndLogout) forControlEvents:UIControlEventTouchUpInside];
     
+    
+    if (_cid) {
+        self.cidLabel.text = _cid;
+    } else {
     NSString *cid = [[NSUserDefaults standardUserDefaults] valueForKey:@"getuiClientID"];
     self.cidLabel.text = (cid != nil) ? cid :@" ";
+    }
     
-    NSString *deviceToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"deviceTokenID"];
-    self.diviceTokenLabel.text = (deviceToken != nil) ? deviceToken :@" ";
+    if (_deviceToken) {
+        self.diviceTokenLabel.text= _deviceToken;
+    } else {
+        NSString *deviceToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"deviceTokenID"];
+        self.diviceTokenLabel.text = (deviceToken != nil) ? deviceToken :@" ";
+    }
+   
+    [self.view addSubview:self.activity];
     
     self.oldIndexPath = [[FNDebugManager shareManager] domainType] - 1;
     self.currentIndexPath = self.oldIndexPath;
 
 }
 
-- (UIView *)footerView{
-    
-    UIView *footerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 200)];
-    
-    UIButton *button = [UIButton buttonWithType:UIButtonTypeCustom];
-    [button setFrame:CGRectMake(20, 30, SCREEN_WIDTH - 40, 40)];
-    button.backgroundColor = [UIColor hexStringToColor:@"#db384c"];
-    button.layer.cornerRadius = 4;
-    button.layer.masksToBounds = YES;
-    [button setTitle:@"保存设置" forState:UIControlStateNormal];
-    [button setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
-    [button addTarget:self action:@selector(saveEnviermentChangeAndLogout) forControlEvents:UIControlEventTouchUpInside];
-    [footerView addSubview:button];
-    
-    UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 70, SCREEN_WIDTH, 60)];
-    title.text = @"由于服务端不建议使用默认token\n,修改登出为网络请求登出，切换环境后保存设置才能生效";
-    title.textColor = [UIColor lightGrayColor];
-    title.font = [UIFont systemFontOfSize:14];
-    title.textAlignment = NSTextAlignmentCenter;
-    title.numberOfLines = 0;
-    [footerView addSubview:title];
-    
-    [footerView addSubview:({
-        UIView *clientIDView = [[UIView alloc] initWithFrame:CGRectMake(0, 140, SCREEN_WIDTH, 60)];
-        
-        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 17)];
-        title.text = @"clientID, 长按拷贝:\n";
-        title.textColor = [UIColor lightGrayColor];
-        title.textAlignment = NSTextAlignmentCenter;
-        [clientIDView addSubview:title];
-        
-        FNMenuLabel *clientIDLabel = [[FNMenuLabel alloc] initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 20)];
-        NSString *deviceToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"getuiClientID"];
-        clientIDLabel.text = (deviceToken != nil) ? deviceToken :@" ";
-        clientIDLabel.textAlignment = NSTextAlignmentCenter;
-        clientIDLabel.adjustsFontSizeToFitWidth = YES;
-        clientIDLabel.textColor = [UIColor lightGrayColor];
-        [clientIDView addSubview:clientIDLabel];
-        
-        [clientIDView addGestureRecognizer:clientIDLabel.longPressGestureRecognizer];
-        
-        clientIDView;
-    })];
-    
-    [footerView addSubview:({
-        UIView *clientIDView = [[UIView alloc] initWithFrame:CGRectMake(0, 200, SCREEN_WIDTH, 90)];
-        
-        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 17)];
-        title.text = @"deviceToken, 长按拷贝:\n";
-        title.textColor = [UIColor lightGrayColor];
-        title.textAlignment = NSTextAlignmentCenter;
-        [clientIDView addSubview:title];
-        
-        FNMenuLabel *clientIDLabel = [[FNMenuLabel alloc] initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 50)];
-        NSString *deviceToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"deviceTokenID"];
-        clientIDLabel.text = (deviceToken != nil) ? deviceToken :@" ";
-        clientIDLabel.textAlignment = NSTextAlignmentCenter;
-        clientIDLabel.numberOfLines = 0;
-        clientIDLabel.adjustsFontSizeToFitWidth = YES;
-        clientIDLabel.textColor = [UIColor lightGrayColor];
-        [clientIDView addSubview:clientIDLabel];
-        
-        [clientIDView addGestureRecognizer:clientIDLabel.longPressGestureRecognizer];
-        
-        clientIDView;
-    })];
-
-    
-    return footerView;
-}
 
 #pragma mark- UITableViewDataSource
 
@@ -165,20 +115,9 @@
 }
 
 
-- (void)saveEviromentChnageSuccess:(saveSuccessBlock)success failure:(saveFailureBlock)failure
-{
-    if (success) {
-        self.saveSuccessBlock = success;
-    }
-    if (failure) {
-        self.saveFailureBlock = failure;
-    }
-    [self saveFailureBlock];
-}
-
 - (void)saveEnviermentChangeAndLogout{
 
-    
+    [self startActivity];
     [FNDebugManager changeEnvironment:self.currentIndexPath + 1];
     // 环境变更后立即去请求一份新的对应环境的API
     WS(weakSelf)
@@ -197,11 +136,26 @@
                 weakSelf.saveFailureBlock();
             }
         }
+        [weakSelf stopActivity];
     }];
   
 }
 
+- (void)startActivity {
+    [self.activity startAnimating];
+}
 
+- (void)stopActivity {
+    [self.activity stopAnimating];
+}
+
+- (UIActivityIndicatorView *)activity {
+    if (!_activity) {
+        _activity = [[UIActivityIndicatorView alloc] initWithFrame:CGRectMake((SCREEN_WIDTH-ActivityWidth)/2, (SCREEN_HEIGHT-ActivityHeight)/2, ActivityWidth, ActivityHeight)];
+        _activity.color = [UIColor darkGrayColor];
+    }
+    return _activity;
+}
 
 
 

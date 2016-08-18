@@ -15,12 +15,12 @@
 //#import <PgyUpdate/PgyUpdateManager.h>
 
 
-
 NSString *  kFNDotNetAPIGeneralURL = @"";
 NSString *  kFNDotNetAPIMerchandiseURL = @"";
 NSString *  kFNDotNetAPIShoppingURL = @"";
 NSString *  kFNDotNetAPIRecommendURL = @"";
 NSString *  const FNDomainTypeDidChangedNotification = @"FNDomainTypeDidChangedNotification";
+
 
 static NSString *  mAppLogNetURL = @"";
 static NSString *  mErrorLogNetURL = @"";
@@ -32,18 +32,14 @@ static NSString * const kUmengKey = @"5796c9d7e0f55a39ba0011fc";
 static NSString * const kChannelId = @"蒲公英";
 
 /**获取 Java API 的 Domain**/
-/*没有都没设置默认为商家测试版*/
+/*没有都设置默认为商家测试版*/
 static NSString *kGetConfigerDomainDev = @"https://mall-mobile-api.dev1.fn";
 static NSString *kGetConfigerDomainBeta = @"https://mall-mobile-api.beta1.fn";
 static NSString *kGetConfigerDomainPreview = @"https://preview-interface-merchant.feiniu.com";
 static NSString *kGetConfigerDomainOnline = @"https://interface-merchant.feiniu.com";
 
-
-
 static NSString * const kBodyKey = @"body";
 static NSString * const KAPIKey = @"wirelessAPI";
-
-
 
 @interface FNDebugManager () <NSURLSessionDelegate, NSURLSessionTaskDelegate>
 
@@ -107,6 +103,13 @@ static NSString * const KAPIKey = @"wirelessAPI";
 #endif
 }
 
+- (void)configCid:(NSString *)cid deviceToken:(NSString *)deviceToken
+{
+    self.cid = cid;
+    self.deviceToken = deviceToken;
+}
+
+
 - (void)readLastConfifegFromUserDeafealt
 {
     // 从userdefault中读取上次保存的环境
@@ -131,6 +134,17 @@ static NSString * const KAPIKey = @"wirelessAPI";
         return YES;
     }
     return NO;
+}
+
+
+- (void)saveEviromentChnageSuccess:(saveSuccessBlock)success failure:(saveFailureBlock)failure
+{
+    if (success) {
+        self.saveSuccessBlock = success;
+    }
+    if (failure) {
+        self.saveFailureBlock = failure;
+    }
 }
 
 - (void)domainTypeResult: (FNDomainType)domainType  result:(void(^)(BOOL success))block

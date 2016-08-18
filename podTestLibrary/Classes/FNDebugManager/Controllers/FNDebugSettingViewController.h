@@ -7,14 +7,23 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "FNDebugManager.h"
 
-typedef void(^saveSuccessBlock)();
-typedef void(^saveFailureBlock)();
+
 
 @interface FNDebugSettingViewController : UIViewController
 @property (nonatomic,copy) saveSuccessBlock saveSuccessBlock;
 @property (nonatomic,copy) saveFailureBlock saveFailureBlock;
 
-- (void)saveEviromentChnageSuccess:(saveSuccessBlock)success failure:(saveFailureBlock)failure;
+/**
+ *  初始化
+ *
+ *  @param cid         传入外部cid显示
+ *  @param deviceToken 传入外部deviceToken显示
+ *
+ *  @return self
+ */
+- (instancetype)initWithCid:(NSString *)cid deviceToken:(NSString *)deviceToken;
+
 
 @end
