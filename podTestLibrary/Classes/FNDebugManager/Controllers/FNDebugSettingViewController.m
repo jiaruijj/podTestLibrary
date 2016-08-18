@@ -17,6 +17,11 @@
 @interface FNDebugSettingViewController () <UITableViewDelegate,UITableViewDataSource>
 
 @property (weak, nonatomic) IBOutlet UITableView *tableView;
+@property (weak, nonatomic) IBOutlet UIButton *settingButton;
+@property (weak, nonatomic) IBOutlet FNMenuLabel *cidLabel;
+@property (weak, nonatomic) IBOutlet FNMenuLabel *diviceTokenLabel;
+
+
 @property (nonatomic, strong) NSArray *titleArray;
 @property (nonatomic, assign) NSInteger currentIndexPath;
 @property (nonatomic, assign) NSInteger oldIndexPath;
@@ -33,12 +38,26 @@
     self.titleArray = @[@"Dev",@"Beta",@"Preview",@"Online",];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"titleCell"];
-    self.tableView.tableFooterView = [self footerView];
+//    self.tableView.tableFooterView = [self footerView];
+    
+    
+    
+}
+
+
+- (void)configUI {
+    [self.settingButton addTarget:self action:@selector(saveEnviermentChangeAndLogout) forControlEvents:UIControlEventTouchUpInside];
+    
+    NSString *cid = [[NSUserDefaults standardUserDefaults] valueForKey:@"getuiClientID"];
+    self.cidLabel.text = (cid != nil) ? cid :@" ";
+    
+    NSString *deviceToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"deviceTokenID"];
+    self.diviceTokenLabel.text = (deviceToken != nil) ? deviceToken :@" ";
+    
     self.oldIndexPath = [[FNDebugManager shareManager] domainType] - 1;
     self.currentIndexPath = self.oldIndexPath;
 
 }
-
 
 - (UIView *)footerView{
     
@@ -72,7 +91,8 @@
         [clientIDView addSubview:title];
         
         FNMenuLabel *clientIDLabel = [[FNMenuLabel alloc] initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 20)];
-//        clientIDLabel.text = [[NSUserDefaults standardUserDefaults] valueForKey:getuiClientID];
+        NSString *deviceToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"getuiClientID"];
+        clientIDLabel.text = (deviceToken != nil) ? deviceToken :@" ";
         clientIDLabel.textAlignment = NSTextAlignmentCenter;
         clientIDLabel.adjustsFontSizeToFitWidth = YES;
         clientIDLabel.textColor = [UIColor lightGrayColor];
@@ -82,6 +102,30 @@
         
         clientIDView;
     })];
+    
+    [footerView addSubview:({
+        UIView *clientIDView = [[UIView alloc] initWithFrame:CGRectMake(0, 200, SCREEN_WIDTH, 90)];
+        
+        UILabel *title = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, SCREEN_WIDTH, 17)];
+        title.text = @"deviceToken, 长按拷贝:\n";
+        title.textColor = [UIColor lightGrayColor];
+        title.textAlignment = NSTextAlignmentCenter;
+        [clientIDView addSubview:title];
+        
+        FNMenuLabel *clientIDLabel = [[FNMenuLabel alloc] initWithFrame:CGRectMake(0, 30, SCREEN_WIDTH, 50)];
+        NSString *deviceToken = [[NSUserDefaults standardUserDefaults] valueForKey:@"deviceTokenID"];
+        clientIDLabel.text = (deviceToken != nil) ? deviceToken :@" ";
+        clientIDLabel.textAlignment = NSTextAlignmentCenter;
+        clientIDLabel.numberOfLines = 0;
+        clientIDLabel.adjustsFontSizeToFitWidth = YES;
+        clientIDLabel.textColor = [UIColor lightGrayColor];
+        [clientIDView addSubview:clientIDLabel];
+        
+        [clientIDView addGestureRecognizer:clientIDLabel.longPressGestureRecognizer];
+        
+        clientIDView;
+    })];
+
     
     return footerView;
 }
