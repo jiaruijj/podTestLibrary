@@ -87,14 +87,27 @@ extern NSString * const FNDomainTypeDidChangedNotification;
 
 /**
  *   在开启debug模式下自动显示debug图窗
- //1、全局模式，在主窗体展示之后，进行设置
- [FNDebugManager shareManager].parentViewController = self;
- [[FNDebugManager shareManager] invocationEvent:FNDebugEventBubble];
- //2、内嵌模式，在某一个页面单独设置
- [FNDebugManager shareManager].parentViewController = self;
- [self.view addSubview:[[FNDebugManager shareManager] debugView]];
+     //1、全局模式，在主窗体展示之后，进行设置
+     [FNDebugManager shareManager].parentViewController = self;
+     [[FNDebugManager shareManager] invocationEvent:FNDebugEventBubble];
+     //2、内嵌模式，在某一个页面单独设置
+     [FNDebugManager shareManager].parentViewController = self;
+     [self.view addSubview:[[FNDebugManager shareManager] debugView]];
  */
 
+/**  核心代码
+ *   [FNDebugManager shareManager].parentViewController = self;
+     [[FNDebugManager shareManager] invocationEvent:FNDebugEventBubble];
+      [FNDebugManager shareManager].devBundleID = @"com.feiniu.test";
+     [[FNDebugManager shareManager] saveEviromentChnageSuccess:^{
+     NSLog(@"changeOk");
+     } failure:^{
+     NSLog(@"changeNotOk");
+     }];
+     [[FNDebugManager shareManager] configCid:@"1234" deviceToken:@"123456789012345678901234567890123456789012345678901234567890"];
+     
+
+ */
 
 
 /**
