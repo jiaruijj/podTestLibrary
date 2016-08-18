@@ -38,6 +38,7 @@
     self.titleArray = @[@"Dev",@"Beta",@"Preview",@"Online",];
     
     [self.tableView registerClass:[UITableViewCell class] forCellReuseIdentifier:@"titleCell"];
+    [self configUI];
 //    self.tableView.tableFooterView = [self footerView];
     
     
