@@ -25,8 +25,6 @@ NSString *  const FNDomainTypeDidChangedNotification = @"FNDomainTypeDidChangedN
 static NSString *  mAppLogNetURL = @"";
 static NSString *  mErrorLogNetURL = @"";
 
-static NSString * const FeiNiuDevBundleID = @"com.feiniu.market.merchant";
-static NSString * const FeiNiuOnlineBundleID = @"com.feiniu.FNMerchant";
 static NSString * const FNLastDomainTypeName = @"FNLastDomainTypeName";
 static NSString * const kUmengKey = @"5796c9d7e0f55a39ba0011fc";
 static NSString * const kChannelId = @"蒲公英";
@@ -45,7 +43,6 @@ static NSString * const KAPIKey = @"wirelessAPI";
 
 @property (nonatomic, strong) UIWindow *window;
 @property (nonatomic, strong) FloatBallButton *floatBallButton;
-@property (nonatomic, copy)   NSString *bundleID;
 
 @property (nonatomic, assign) BOOL enableDownloadAPI;
 @property (nonatomic, strong) NSDictionary *apiDictionary;
@@ -262,20 +259,6 @@ static NSString * const KAPIKey = @"wirelessAPI";
 
 }
 
-- (NSString *)bundleID{
-    if (!_bundleID) {
-        _bundleID = [[NSBundle mainBundle] bundleIdentifier];
-    }
-    return _bundleID;
-}
-
-- (BOOL)isOnlineClient{
-    
-    if ([self.bundleID isEqualToString:(self.devBundleID?self.devBundleID:FeiNiuDevBundleID)]) {
-        return NO;
-    }
-    return YES;
-}
 
 - (FNDomainType)defaultDomainType{
     if (_defaultDomainType) {
@@ -514,7 +497,8 @@ static NSString * const KAPIKey = @"wirelessAPI";
 }
 
 - (void)addTrustedCertificates {
-    if (!self.isHttps) return;
+    NSString *domainURLString = [self javaDomainForCurrentEnvironment];
+    if (![domainURLString containsString:@"https"]) return;
     NSString *cerPath = [[NSBundle myLibraryBundle] pathForResource:@"fn_ssl" ofType:@"cer"];
     NSData *cerData = [NSData dataWithContentsOfFile:cerPath];
     SecCertificateRef certificate = SecCertificateCreateWithData(NULL, (__bridge CFDataRef)(cerData));
